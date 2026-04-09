@@ -1,0 +1,139 @@
+#!/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+###########################################################################
+# Copyright © 1998 - 2026 Tencent. All Rights Reserved.
+###########################################################################
+"""
+Author: Tencent AI Arena Authors
+
+Configuration for Gorge Chase PPO.
+峡谷追猎 PPO 配置。
+"""
+
+
+class Config:
+
+    # Feature dimensions / 特征维度（共52维）
+    # 6 : 英雄与状态特征
+    # 5 : 怪物1特征
+    # 5 : 怪物2特征
+    # 16: 局部地图特征
+    # 16: 合法动作掩码特征（含闪现）
+    # 4 : 进度特征
+    FEATURES = [
+        6,
+        5,
+        5,
+        16,
+        16,
+        4,
+    ]
+    FEATURE_SPLIT_SHAPE = FEATURES
+    FEATURE_LEN = sum(FEATURE_SPLIT_SHAPE)
+    DIM_OF_OBSERVATION = FEATURE_LEN
+
+    # Action space / 动作空间：16个动作（8移动 + 8闪现）
+    ACTION_NUM = 16
+
+    # Value head / 价值头：单头生存奖励
+    VALUE_NUM = 1
+
+    # PPO hyperparameters / PPO 超参数
+    GAMMA = 0.99
+    LAMDA = 0.95
+    INIT_LEARNING_RATE_START = 0.0003
+    MIN_LEARNING_RATE = 0.00005
+    LR_DECAY = 0.99995
+    ADAM_EPS = 1e-8
+    BETA_START = 0.001
+    BETA_END = 0.0002
+    BETA_DECAY = 0.99995
+    CLIP_PARAM = 0.2
+    VALUE_CLIP_PARAM = 0.2
+    VF_COEF = 1.0
+    GRAD_CLIP_RANGE = 0.5
+    PPO_EPOCHS = 4
+    PPO_MINI_BATCH_SIZE = 256
+    TARGET_KL = 0.03
+
+    # Model / 网络结构参数
+    MODEL_HIDDEN_DIM = 256
+    MODEL_LATENT_DIM = 128
+
+    # Torch acceleration / Torch加速
+    ENABLE_TORCH_COMPILE = True
+    TORCH_COMPILE_MODE = "reduce-overhead"
+    TORCH_COMPILE_DYNAMIC = True
+    TORCH_COMPILE_FULLGRAPH = False
+    ENABLE_AMP = True
+    AMP_DTYPE = "bfloat16"  # bfloat16 / float16
+
+    # Epsilon exploration schedule / 分段epsilon探索
+    EPSILON_MAX = 0.35
+    EPSILON_MIN = 0.05
+    EPS_STAGE_TOTAL_STEPS = 300000
+    EPS_STAGE1_RATIO = 0.40
+    EPS_STAGE2_RATIO = 0.85
+    EPS_STAGE1_VALUE = 0.20
+    EPS_STAGE2_VALUE = 0.10
+    EPS_FINAL_VALUE = 0.05
+    FLASH_EXPLORE_PROB = 0.45
+
+    # Reward shaping / 奖励塑形
+    REW_SCORE_SCALE = 0.02
+    REW_STEP_SURVIVE = 0.01
+    REW_MONSTER_DIST = 0.08
+    REW_FLASH_CAST = 0.10
+    REW_FLASH_EFFECTIVE = 0.20
+    REW_TREASURE_GET = 0.50
+    REW_BUFF_GET = 0.30
+    REW_TERMINATED = -1.0
+    REW_TRUNCATED = 1.0
+
+    # Sparse milestone reward on survived steps / 步数里程碑稀疏奖励
+    ENABLE_STEP_MILESTONE_REWARD = True
+    STEP_MILESTONE_STEPS = [300, 600, 900, 1200, 1500, 1800]
+    STEP_MILESTONE_REWARDS = [0.06, 0.08, 0.10, 0.12, 0.14, 0.16]
+
+    # Phase schedule / 三阶段训练
+    TRAIN_PHASE_STAGE1_END_STEP = 30000
+    TRAIN_PHASE_STAGE2_END_STEP = 120000
+
+    TRAIN_PHASE_STAGE1_RATIO_LOW = 1.0
+    TRAIN_PHASE_STAGE1_RATIO_HIGH = 1.5
+    TRAIN_PHASE_STAGE2_RATIO_LOW = 1.5
+    TRAIN_PHASE_STAGE2_RATIO_HIGH = 2.0
+    TRAIN_PHASE_STAGE3_RATIO_LOW = 2.0
+    TRAIN_PHASE_STAGE3_RATIO_HIGH = 2.5
+
+    TRAIN_PHASE_STAGE1_EPS_SCALE = 1.15
+    TRAIN_PHASE_STAGE2_EPS_SCALE = 1.00
+    TRAIN_PHASE_STAGE3_EPS_SCALE = 0.85
+
+    TRAIN_PHASE_STAGE1_FLASH_EXPLORE_PROB = 0.55
+    TRAIN_PHASE_STAGE2_FLASH_EXPLORE_PROB = 0.35
+    TRAIN_PHASE_STAGE3_FLASH_EXPLORE_PROB = 0.20
+
+    TRAIN_PHASE_STAGE1_PPO_EPOCHS = 3
+    TRAIN_PHASE_STAGE2_PPO_EPOCHS = 4
+    TRAIN_PHASE_STAGE3_PPO_EPOCHS = 5
+
+    TRAIN_PHASE_STAGE1_TARGET_KL = 0.04
+    TRAIN_PHASE_STAGE2_TARGET_KL = 0.03
+    TRAIN_PHASE_STAGE3_TARGET_KL = 0.02
+
+    TRAIN_PHASE_STAGE1_BETA_SCALE = 1.20
+    TRAIN_PHASE_STAGE2_BETA_SCALE = 1.00
+    TRAIN_PHASE_STAGE3_BETA_SCALE = 0.80
+
+    TRAIN_PHASE_STAGE1_FLASH_REWARD_SCALE = 1.60
+    TRAIN_PHASE_STAGE2_FLASH_REWARD_SCALE = 1.20
+    TRAIN_PHASE_STAGE3_FLASH_REWARD_SCALE = 1.00
+
+    TRAIN_PHASE_STAGE1_SCORE_REWARD_SCALE = 0.90
+    TRAIN_PHASE_STAGE2_SCORE_REWARD_SCALE = 1.00
+    TRAIN_PHASE_STAGE3_SCORE_REWARD_SCALE = 1.10
+
+    TRAIN_PHASE_STAGE1_MILESTONE_REWARD_SCALE = 1.10
+    TRAIN_PHASE_STAGE2_MILESTONE_REWARD_SCALE = 1.00
+    TRAIN_PHASE_STAGE3_MILESTONE_REWARD_SCALE = 0.90
